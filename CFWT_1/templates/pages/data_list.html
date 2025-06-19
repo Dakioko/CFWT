@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Data{% endblock title %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+<div class="container mt-0">  <!-- Reduced margin-top to remove space -->
+    <h2 class="text-center fw-bold mb-3" style="color: #004085;">Climate Finance Data</h2>
+
+    <!-- Description Section -->
+    <div class="d-flex justify-content-between align-items-center px-4 py-2 bg-light rounded shadow-sm">
+        <p class="text-muted mb-0">
+            Explore and analyze climate finance data. You can search, sort, and export the data for further analysis.
+        </p>
+
+        <!-- Import, Export & Add Data Buttons -->
+        <div class="d-flex gap-2">
+            <a href="{% url 'export_csv' %}" class="btn btn-success btn-sm">
+                <i class="bi bi-download"></i> Export as CSV
+            </a>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'data_import' %}" class="btn btn-warning btn-sm">
+                    <i class="bi bi-upload"></i> Import
+                </a>
+                <a href="{% url 'data_create' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Add Data
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search and Table -->
+    <div class="card border-0 shadow-lg rounded-4 mt-2">
+        <div class="card-header bg-white border-bottom-0 px-4 py-3 d-flex justify-content-end">
+            <!-- Search Form -->
+            <form method="GET" class="d-flex" style="max-width: 400px;">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    {% if request.GET.q %}
+                        <a href="{% url 'data_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <!-- Table Section -->
+        <div class="card-body px-4 py-4">
+            {% if table %}
+                <div class="table-responsive">
+                    {% render_table table %}
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <i class="bi bi-database-x fs-1 text-secondary"></i>
+                    <p class="text-muted mt-2">No climate finance data available.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS for Table Styling -->
+<style>
+    /* Table Header Styling */
+    .table thead th {
+        background-color: #DDFF7D; /* Light green shade */
+        color: black; /* Black text for better contrast */
+        font-weight: bold;
+    }
+
+    /* Alternating row colors (zebra striping) */
+    .table tbody tr:nth-child(odd) {
+        background-color: #f8f9fa; /* Light gray for odd rows */
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #ffffff; /* White for even rows */
+    }
+
+    /* Add a border to table rows for better readability */
+    .table tbody tr {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Hover effect on table rows */
+    .table tbody tr:hover {
+        background-color: #e9ecef !important; /* Slightly darker gray on hover */
+    }
+
+    /* Add padding to table cells */
+    .table td, .table th {
+        padding: 12px;
+    }
+
+    /* Right-align the Amount column */
+    .table td.text-end {
+        text-align: right;
+    }
+
+    /* Style the search input and button */
+    .input-group {
+        max-width: 400px;
+    }
+
+    .input-group .btn {
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* Style the empty state icon */
+    .bi-database-x {
+        font-size: 3rem;
+        color: #6c757d;
+    }
+
+    /* Style the Actions column buttons */
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 0.875rem;
+    }
+
+    .btn-outline-primary {
+        border-color: #004085;
+        color: #004085;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #004085;
+        color: white;
+    }
+
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+{% endblock %}

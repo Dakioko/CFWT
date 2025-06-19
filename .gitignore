@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.CFWT_venv/
+
+# SQLite databases
+CFWT_1/db.sqlite3
+CFWT_2/db.sqlite3
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+
+# VS Code settings
+.vscode/
+
+# Environment variables
+.env
+*.env
+
+# Migrations (optional — if you don’t want to track them early)
+**/migrations/
+!**/migrations/__init__.py
+
+# OS files
+.DS_Store
+Thumbs.db

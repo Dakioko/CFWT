@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Climate Finance Data{% endblock %}
+
+{% block content %}
+<div class="container mt-4"> <!-- Adjusted margin-top for better spacing -->
+
+    <!-- Page Title & Description -->
+    <h2 class="text-center fw-bold mb-4" style="color: #004085; font-size: 2rem;">Edit Climate Finance Data</h2>
+
+    <div class="d-flex justify-content-between align-items-center px-4 py-3 bg-light rounded shadow-sm mb-4">
+        <p class="text-muted mb-0" style="font-size: 0.9rem;">
+            Update the climate finance data below and click <strong>Update</strong> to save changes.
+            Ensure the information is accurate before submitting.
+        </p>
+    </div>
+
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>There were errors in your submission:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Form Card -->
+    <div class="card border-0 shadow-lg rounded-4 mt-3">
+        <div class="card-body px-5 py-4">
+            <form action="" method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Project Name Field -->
+                <div class="mb-4">
+                    <label for="project-name" class="form-label fw-bold">Project Name</label>
+                    <input type="text" class="form-control rounded-3 border-2" id="project-name" name="project_name" value="{{ form.project_name.value }}" placeholder="Enter project name" required>
+                    <div class="invalid-feedback">Please provide a valid project name.</div>
+                </div>
+
+                <!-- Funding Source Field -->
+                <div class="mb-4">
+                    <label for="funding-source" class="form-label fw-bold">Funding Source</label>
+                    <input type="text" class="form-control rounded-3 border-2" id="funding-source" name="funding_source" value="{{ form.funding_source.value }}" placeholder="Enter funding source" required>
+                    <div class="invalid-feedback">Please provide a valid funding source.</div>
+                </div>
+
+                <!-- Amount Field with KES Symbol -->
+                <div class="mb-4">
+                    <label for="amount" class="form-label fw-bold">Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">KES</span>
+                        <input type="number" class="form-control rounded-3 border-2" id="amount" name="amount" value="{{ form.amount.value }}" placeholder="Enter amount" required>
+                    </div>
+                    <div class="invalid-feedback">Please provide a valid amount.</div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary px-4 py-2 rounded-3" type="submit" id="manual-submit-btn">
+                        <i class="bi bi-check-circle"></i> <span id="manual-submit-text">Update</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Form Validation Script -->
+<script defer>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
+<!-- Loading State Script for Update Submission -->
+<script>
+    document.querySelector('.needs-validation').addEventListener('submit', function (e) {
+        const submitBtn = document.getElementById('manual-submit-btn');
+        const submitText = document.getElementById('manual-submit-text');
+        submitBtn.disabled = true;
+        submitText.textContent = 'Updating...';
+        
+        // Optionally, you could simulate a slight delay to show the "Updating..." state
+        setTimeout(() => {
+            submitBtn.disabled = false;  // Re-enable the button after a delay
+            submitText.textContent = 'Update';  // Reset the text back to "Update"
+        }, 2000);  // Adjust the delay (2000ms = 2 seconds)
+    });
+</script>
+
+{% endblock %}

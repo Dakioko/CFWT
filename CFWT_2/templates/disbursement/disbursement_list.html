@@ -1,0 +1,121 @@
+{% extends "dashboard.html" %}
+{% block title %}Disbursements{% endblock %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Card with soft shadows and glassmorphism -->
+    <div class="card border-0 shadow-lg rounded-4 bg-white bg-opacity-75 backdrop-blur">
+        <!-- Header -->
+        <div class="card-header bg-transparent px-4 py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <h2 class="mb-0 text-primary fw-semibold fs-4">
+                <i class="bi bi-cash-coin me-2 text-success"></i> Disbursements
+            </h2>
+
+            <!-- Search & Actions -->
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <!-- Search -->
+                <form method="GET" class="d-flex" role="search">
+                    <div class="input-group shadow-sm" style="max-width: 300px;">
+                        <input type="text" name="q" class="form-control" placeholder="Search disbursements..." value="{{ request.GET.q }}">
+                        <button class="btn btn-outline-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        {% if request.GET.q %}
+                            <a href="{% url 'disbursement_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </form>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    <a href="{% url 'export_disburse' %}" class="btn btn-success btn-sm shadow-sm d-flex align-items-center">
+                        <i class="bi bi-download me-1"></i> Export
+                    </a>
+                    <a href="{% url 'disbursement_create' %}" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center">
+                        <i class="bi bi-plus-lg me-1"></i> Add
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="card-body px-4 py-4">
+            {% if table %}
+                <div class="table-responsive rounded-3 border">
+                    {% render_table table %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-database-x fs-1 text-muted"></i>
+                    <p class="text-muted mt-3 fs-5">No disbursements found.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    /* Table Head */
+    .table thead th {
+        background-color: #e3f2fd;
+        color: #0d6efd;
+        font-weight: 600;
+        padding: 1rem;
+    }
+
+    /* Table Body */
+    .table tbody tr:nth-child(odd) {
+        background-color: #fafafa;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f3f5;
+        transition: background 0.2s ease-in-out;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 0.9rem 1rem;
+    }
+
+    .table td.text-end {
+        text-align: right;
+    }
+
+    /* Buttons */
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Card Enhancement */
+    .backdrop-blur {
+        backdrop-filter: blur(6px);
+    }
+
+    /* Responsive fixes */
+    @media (max-width: 576px) {
+        .input-group {
+            max-width: 100% !important;
+        }
+
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card-header .d-flex {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+</style>
+{% endblock %}

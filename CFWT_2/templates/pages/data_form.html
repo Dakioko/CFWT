@@ -1,0 +1,91 @@
+{% extends "dashboard.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}New Data{% endblock %}
+
+{% block content %}
+<div class="container mt-0">
+    <h2 class="text-center fw-bold mb-3" style="color: #004085;">Add New Climate Finance Data</h2>
+
+    <div class="d-flex justify-content-between align-items-center px-4 py-2 bg-light rounded shadow-sm">
+        <p class="text-muted mb-0">
+            Ensure that the data is <strong>validated</strong> and sourced from a <strong>reliable organization</strong>.
+            Inaccurate data can lead to misleading climate finance reports.
+        </p>
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>There were errors in your submission:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="card border-0 shadow-lg rounded-4 mt-3">
+        <div class="card-header bg-white border-bottom-0 px-4 py-3 d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold">
+                <i class="bi bi-pencil-square"></i> Manual Entry
+            </h4>
+            <a href="{% url 'data_import' %}" class="btn btn-success btn-sm">
+                <i class="bi bi-upload"></i> Upload Bulk Data
+            </a>
+        </div>
+
+        <div class="card-body px-4 py-4">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary w-100" type="submit" id="manual-submit-btn">
+                        <i class="bi bi-check-circle"></i> <span id="manual-submit-text">Save Data</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="clearForm()">
+                        <i class="bi bi-x-circle"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script defer>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
+<script>
+    document.querySelector('.needs-validation').addEventListener('submit', function (e) {
+        const submitBtn = document.getElementById('manual-submit-btn');
+        const submitText = document.getElementById('manual-submit-text');
+        submitBtn.disabled = true;
+        submitText.textContent = 'Saving...';
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitText.textContent = 'Save Data';
+        }, 2000);
+    });
+
+    function clearForm() {
+        document.querySelector('.needs-validation').reset();
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    }
+</script>
+{% endblock %}

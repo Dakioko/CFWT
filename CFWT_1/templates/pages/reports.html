@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Climate Finance Reports{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center fw-bold mb-4" style="color: #004085;">Climate Finance Reports</h2>
+
+    <div class="row">
+        <!-- Bar Chart: Funding Per Source -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 mb-4">
+                <h5 class="text-center">Total Funding Per Source</h5>
+                <canvas id="fundingBarChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Pie Chart: Distribution of Projects -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 mb-4">
+                <h5 class="text-center">Funding Distribution Across Projects</h5>
+                <canvas id="fundingPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Line Chart: Funding Trends Over Time -->
+        <div class="col-md-12">
+            <div class="card shadow-sm p-3 mb-4">
+                <h5 class="text-center">Funding Trends Over Time</h5>
+                <canvas id="fundingLineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fetch data from Django context
+        let fundingSources = JSON.parse('{{ funding_sources|safe }}');
+        let fundingAmounts = JSON.parse('{{ funding_amounts|safe }}');
+        let projectNames = JSON.parse('{{ project_names|safe }}');
+        let projectFunding = JSON.parse('{{ project_funding|safe }}');
+        let timelineLabels = JSON.parse('{{ timeline_labels|safe }}');
+        let timelineData = JSON.parse('{{ timeline_data|safe }}');
+
+        // Bar Chart: Total Funding Per Source
+        new Chart(document.getElementById("fundingBarChart"), {
+            type: 'bar',
+            data: {
+                labels: fundingSources,
+                datasets: [{
+                    label: "Funding Amount",
+                    backgroundColor: "#007bff",
+                    data: fundingAmounts
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Pie Chart: Funding Distribution Across Projects
+        new Chart(document.getElementById("fundingPieChart"), {
+            type: 'pie',
+            data: {
+                labels: projectNames,
+                datasets: [{
+                    label: "Funding Amount",
+                    backgroundColor: ["#007bff", "#28a745", "#dc3545", "#ffc107", "#17a2b8"],
+                    data: projectFunding
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Line Chart: Funding Trends Over Time
+        new Chart(document.getElementById("fundingLineChart"), {
+            type: 'line',
+            data: {
+                labels: timelineLabels,
+                datasets: [{
+                    label: "Funding Over Time",
+                    borderColor: "#28a745",
+                    fill: false,
+                    data: timelineData
+                }]
+            },
+            options: { responsive: true }
+        });
+    });
+</script>
+{% endblock %}

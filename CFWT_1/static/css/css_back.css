@@ -1,0 +1,203 @@
+/* Import Modern Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@300;400;600&family=Montserrat:wght@300;400;600&display=swap');
+
+/* CSS Variables for Reusability */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #0056b3;
+    --background-color: #fff;
+    --text-color: #333;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --border-radius: 10px;
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Inter', sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+}
+
+/* Global Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-primary);
+    color: var(--text-color);
+}
+
+/* Navbar Styling */
+.navbar {
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 1rem;
+    background: var(--background-color);
+    padding: 10px 30px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--text-color);
+    margin: 0 15px;
+    transition: 0.3s;
+}
+
+.navbar a:hover {
+    color: var(--secondary-color);
+}
+
+.navbar .nav-items {
+    display: flex;
+    gap: 20px;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--secondary-color) 30%, #00a859 100%);
+    padding: 50px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+}
+
+.hero p {
+    font-size: 1.1rem;
+    font-family: var(--font-secondary);
+    max-width: 600px;
+    margin: auto;
+}
+
+.hero .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.hero .btn-light {
+    color: #000;
+}
+
+.hero .btn-outline-light:hover {
+    background: var(--background-color);
+    color: var(--primary-color);
+}
+
+/* Features Section */
+.features {
+    padding: 40px 0;
+}
+
+.feature-card {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    text-align: center;
+    padding: 20px;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    color: var(--primary-color) !important;
+    margin-bottom: 10px;
+}
+
+/* Form Container Styling */
+.p-4 {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* Form Fields */
+form .form-control {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Manual Entry Form Styling */
+.manual-entry-card {
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    background: var(--background-color);
+}
+
+.manual-entry-card h3 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.manual-entry-card input[type="text"],
+.manual-entry-card input[type="number"],
+.manual-entry-card select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.manual-entry-card .btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.manual-entry-card .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.manual-entry-card .btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .features {
+        padding: 20px 0;
+    }
+
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .col-lg-5, .col-md-6, .col-sm-10 {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .manual-entry-card {
+        max-width: 600px;
+        margin: auto;
+    }
+}

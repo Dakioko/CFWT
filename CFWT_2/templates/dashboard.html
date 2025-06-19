@@ -1,0 +1,313 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vens{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/dash.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <aside class="sidebar" aria-label="Main navigation">
+            <div class="sidebar-header">
+                <a href="{% url 'dashboard' %}" class="d-flex align-items-center text-decoration-none" style="color: inherit;">
+                    <div class="logo" aria-hidden="true">V</div>
+                    <h3 class="mb-0 ms-2">Vens</h3>
+                </a>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <!-- Dashboard -->
+                <div class="menu-group">
+                    <a href="{% url 'dashboard' %}" class="menu-main-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" aria-current="{% if request.resolver_match.url_name == 'dashboard' %}page{% endif %}">
+                        <div class="menu-icon"><i class="fas fa-tachometer-alt" aria-hidden="true"></i></div>
+                        <div class="menu-text">Dashboard</div>
+                    </a>
+                </div>
+
+                <!-- Projects & Funding -->
+                <div class="menu-group">
+                    <div class="menu-main-item" data-bs-toggle="collapse" href="#projectsFundingSubmenu" role="button">
+                        <div class="menu-icon"><i class="fas fa-project-diagram" aria-hidden="true"></i></div>
+                        <div class="menu-text">Finances</div>
+                        <i class="fas fa-chevron-down menu-arrow"></i>
+                    </div>
+                    <div class="collapse submenu" id="projectsFundingSubmenu">
+                        <a href="{% url 'project_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Projects
+                        </a>
+                        <a href="{% url 'disbursement_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'disbursement_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Disbursements
+                        </a>
+                        <a href="{% url 'data_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'sector_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Financial Records
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Stakeholders -->
+                <div class="menu-group">
+                    <div class="menu-main-item" data-bs-toggle="collapse" href="#stakeholdersSubmenu" role="button">
+                        <div class="menu-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
+                        <div class="menu-text">Stakeholders</div>
+                        <i class="fas fa-chevron-down menu-arrow"></i>
+                    </div>
+                    <div class="collapse submenu" id="stakeholdersSubmenu">
+                        <a href="{% url 'funding_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'recipient_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Funding Sources
+                        </a>
+                        <a href="{% url 'recipient_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'recipient_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Recipients
+                        </a>
+                        <a href="{% url 'sector_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'sector_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Climate Sectors
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Reports -->
+                <div class="menu-group">
+                    <div class="menu-main-item" data-bs-toggle="collapse" href="#reportsSubmenu" role="button">
+                        <div class="menu-icon"><i class="fas fa-chart-bar" aria-hidden="true"></i></div>
+                        <div class="menu-text">Reports</div>
+                        <i class="fas fa-chevron-down menu-arrow"></i>
+                    </div>
+                    <div class="collapse submenu" id="reportsSubmenu">
+                        <a href="#" class="submenu-item">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Financial Reports
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Project Reports
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Disbursement Reports
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Stakeholder Reports
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Other -->
+                <div class="menu-group">
+                    <div class="menu-main-item" data-bs-toggle="collapse" href="#otherSubmenu" role="button">
+                        <div class="menu-icon"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></div>
+                        <div class="menu-text">Other</div>
+                        <i class="fas fa-chevron-down menu-arrow"></i>
+                    </div>
+                    <div class="collapse submenu" id="otherSubmenu">
+                        <a href="{% url 'auditlog_list' %}" class="submenu-item {% if request.resolver_match.url_name == 'auditlog_list' %}active{% endif %}">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> Audit Logs
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <i class="fas fa-circle-notch fa-xs me-2"></i> My Profile
+                        </a>
+                        <form method="post" action="{% url 'logout' %}" class="mb-0">
+                            {% csrf_token %}
+                            <button type="submit" class="submenu-item text-danger" 
+                                    style="background: none; border: none; width: 100%; text-align: left;">
+                                <i class="fas fa-circle-notch fa-xs me-2"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="d-flex align-items-center">
+                    <button class="toggle-sidebar btn p-0 me-3" aria-label="Toggle sidebar">
+                        <i class="fas fa-bars fs-5" aria-hidden="true"></i>
+                    </button>
+                    <div class="search-bar">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <input type="text" class="form-control ps-5" placeholder="Search..." aria-label="Search">
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-3">
+                    {% if user.is_authenticated %}
+                    <div class="nav-item dropdown user-dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center p-0" href="#" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent; border: none;">
+                            <span class="fw-semibold">{{ user.username }}</span>
+                            <i class="fas fa-chevron-down ms-2 small"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end mt-2 shadow">
+                            <li class="dropdown-header text-muted small">Account</li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user me-2 text-primary"></i>My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cog me-2 text-primary"></i>Settings
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'password_change' %}">
+                                    <i class="fas fa-lock me-2 text-primary"></i>Change Password
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="mb-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger" 
+                                            style="background: none; border: none; width: 100%; text-align: left;">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt me-1"></i> Login
+                    </a>
+                    {% endif %}
+                </div>
+            </header>
+
+            <div class="content">
+                {% block content %}
+                <h5 class="page-title mb-4">Dashboard</h5>
+                
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon primary me-3">
+                                    <i class="fas fa-project-diagram" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1">120</h3>
+                                    <p class="text-muted mb-0">Total Projects</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon success me-3">
+                                    <i class="fas fa-dollar-sign" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1">$50M</h3>
+                                    <p class="text-muted mb-0">Total Funding</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon warning me-3">
+                                    <i class="fas fa-users" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1">58</h3>
+                                    <p class="text-muted mb-0">Active Recipients</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon danger me-3">
+                                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1">5</h3>
+                                    <p class="text-muted mb-0">Pending Actions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="card-title mb-0">Funding Overview</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="fundingChart" aria-label="Funding chart" role="img"></canvas>
+                        </div>
+                    </div>
+                </div>
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <button class="mobile-sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars fs-5" aria-hidden="true"></i>
+    </button>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="deleteModalLabel">Confirm Deletion</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this item? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteForm" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <span class="delete-text">Delete</span>
+                            <span class="loading-spinner d-none"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

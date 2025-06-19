@@ -1,0 +1,94 @@
+{% extends "dashboard.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}New Project{% endblock %}
+
+{% block content %}
+<div class="container mt-0">
+    <h2 class="text-center fw-bold mb-3" style="color: #004085;">Add New Project</h2>
+    <div class="card border-0 shadow-lg rounded-4 mt-3">
+        <div class="card-body px-4 py-4">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <!-- Project Name & Description -->
+                {{ form.name|as_crispy_field }}
+                {{ form.description|as_crispy_field }}
+
+                <!-- Recipient & Sector -->
+                {{ form.recipient|as_crispy_field }}
+                {{ form.sector|as_crispy_field }}
+
+                <!-- Start Date -->
+                <div class="mb-4">
+                    <label for="start-date" class="form-label fw-bold">Start Date</label>
+                    <input type="text" class="form-control datepicker" id="start-date" name="start_date"
+                           value="{{ form.start_date.value|default_if_none:'' }}" required>
+                    <div class="invalid-feedback">Please select a start date.</div>
+                </div>
+
+                <!-- End Date -->
+                <div class="mb-4">
+                    <label for="end-date" class="form-label fw-bold">End Date</label>
+                    <input type="text" class="form-control datepicker" id="end-date" name="end_date"
+                           value="{{ form.end_date.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Submit and Clear Buttons -->
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary w-100" type="submit" id="manual-submit-btn">
+                        <i class="bi bi-check-circle"></i> <span id="manual-submit-text">Save Data</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="clearForm()">
+                        <i class="bi bi-x-circle"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Load Flatpickr for Calendar Datepicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        flatpickr(".datepicker", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            allowInput: true,  // Allows manual input
+        });
+    });
+
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+    document.querySelector('.needs-validation').addEventListener('submit', function (e) {
+        const submitBtn = document.getElementById('manual-submit-btn');
+        const submitText = document.getElementById('manual-submit-text');
+        submitBtn.disabled = true;
+        submitText.textContent = 'Saving...';
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitText.textContent = 'Save Data';
+        }, 2000);
+    });
+
+    function clearForm() {
+        document.querySelector('.needs-validation').reset();
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    }
+</script>
+{% endblock %}

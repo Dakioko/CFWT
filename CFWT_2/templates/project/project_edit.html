@@ -1,0 +1,116 @@
+{% extends "dashboard.html" %}
+
+{% block title %}Update Project{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Page Title -->
+    <h2 class="text-center fw-bold mb-4" style="color: #004085; font-size: 2rem;">Edit Project</h2>
+
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>There were errors in your submission:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Form Card -->
+    <div class="card border-0 shadow-lg rounded-4 mt-3">
+        <div class="card-body px-5 py-4">
+            <form action="" method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <!-- Project Name -->
+                <div class="mb-4">
+                    <label for="project-name" class="form-label fw-bold">Project Name</label>
+                    <input type="text" class="form-control rounded-3 border-2" id="project-name" name="name" 
+                           value="{{ form.name.value|default_if_none:'' }}" placeholder="Enter project name" required>
+                    <div class="invalid-feedback">Please provide a valid project name.</div>
+                </div>
+
+                <!-- Project Description -->
+                <div class="mb-4">
+                    <label for="project-description" class="form-label fw-bold">Description</label>
+                    <textarea class="form-control rounded-3 border-2" id="project-description" name="description" 
+                              rows="3" placeholder="Enter project description">{{ form.description.value|default_if_none:'' }}</textarea>
+                </div>
+
+                <!-- Recipient -->
+                <div class="mb-4">
+                    <label for="project-recipient" class="form-label fw-bold">Recipient</label>
+                    {{ form.recipient }}
+                </div>
+
+                <!-- Sector -->
+                <div class="mb-4">
+                    <label for="project-sector" class="form-label fw-bold">Sector</label>
+                    {{ form.sector }}
+                </div>
+
+                <!-- Start Date with Calendar Picker -->
+                <div class="mb-4">
+                    <label for="start-date" class="form-label fw-bold">Start Date</label>
+                    <input type="text" class="form-control rounded-3 border-2 datepicker" id="start-date" name="start_date"
+                           value="{{ form.start_date.value|default_if_none:'' }}" required>
+                    <div class="invalid-feedback">Please select a start date.</div>
+                </div>
+
+                <!-- End Date with Calendar Picker -->
+                <div class="mb-4">
+                    <label for="end-date" class="form-label fw-bold">End Date</label>
+                    <input type="text" class="form-control rounded-3 border-2 datepicker" id="end-date" name="end_date"
+                           value="{{ form.end_date.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary px-4 py-2 rounded-3" type="submit" id="manual-submit-btn">
+                        <i class="bi bi-check-circle"></i> <span id="manual-submit-text">Update</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Include Flatpickr CSS & JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- Initialize Flatpickr -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        flatpickr(".datepicker", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            allowInput: true, // Allow manual input
+        });
+    });
+</script>
+
+<!-- Bootstrap Form Validation Script -->
+<script defer>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
+{% endblock %}

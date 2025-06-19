@@ -1,0 +1,114 @@
+{% extends "dashboard.html" %}
+{% block title %}Update Climate Finance Data{% endblock %}
+
+{% block content %}
+<div class="container mt-4"> <!-- Adjusted margin-top for better spacing -->
+
+    <!-- Page Title -->
+    <h2 class="text-center fw-bold mb-4" style="color: #004085; font-size: 2rem;">Edit Climate Finance Data</h2>
+
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>There were errors in your submission:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Form Card -->
+    <div class="card border-0 shadow-lg rounded-4 mt-3">
+        <div class="card-body px-5 py-4">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Project Selection -->
+                <div class="mb-4">
+                    <label for="project" class="form-label fw-bold">Project</label>
+                    {{ form.project }}
+                    <div class="invalid-feedback">Please select a valid project.</div>
+                </div>
+
+                <!-- Funding Source -->
+                <div class="mb-4">
+                    <label for="funding_source" class="form-label fw-bold">Funding Source</label>
+                    {{ form.funding_source }}
+                    <div class="invalid-feedback">Funding source is required.</div>
+                </div>
+
+                <!-- Funding Type -->
+                <div class="mb-4">
+                    <label for="funding_type" class="form-label fw-bold">Funding Type</label>
+                    {{ form.funding_type }}
+                </div>
+
+                <!-- Total Amount -->
+                <div class="mb-4">
+                    <label for="total_amount" class="form-label fw-bold">Total Amount</label>
+                    <input type="number" step="0.01" class="form-control rounded-3 border-2" id="total_amount"
+                           name="total_amount" value="{{ form.total_amount.value|default_if_none:'' }}" required>
+                    <div class="invalid-feedback">Please enter a valid amount.</div>
+                </div>
+
+                <!-- Currency -->
+                <div class="mb-4">
+                    <label for="currency" class="form-label fw-bold">Currency</label>
+                    {{ form.currency }}
+                </div>
+
+                <!-- Status -->
+                <div class="mb-4">
+                    <label for="status" class="form-label fw-bold">Status</label>
+                    {{ form.status }}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary px-4 py-2 rounded-3" type="submit" id="manual-submit-btn">
+                        <i class="bi bi-check-circle"></i> <span id="manual-submit-text">Update</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Form Validation Script -->
+<script defer>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
+<!-- Loading State Script for Update Submission -->
+<script>
+    document.querySelector('.needs-validation').addEventListener('submit', function (e) {
+        const submitBtn = document.getElementById('manual-submit-btn');
+        const submitText = document.getElementById('manual-submit-text');
+        submitBtn.disabled = true;
+        submitText.textContent = 'Updating...';
+
+        // Reset button state in case of error
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitText.textContent = 'Update';
+        }, 2000);
+    });
+</script>
+
+{% endblock %}
